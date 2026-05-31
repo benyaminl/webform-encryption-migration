@@ -1,0 +1,27 @@
+@{
+    ViewData["Title"] = "Create User";
+}
+
+<h1>Create New User</h1>
+<a asp-action="Index">&larr; Back to Users</a>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger mt-2">@TempData["Error"]</div>
+}
+
+<form method="post" class="mt-3" style="max-width:400px">
+    <div class="mb-3">
+        <label class="form-label">Username</label>
+        <input type="text" name="username" class="form-control" required />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Password</label>
+        <input type="password" name="password" class="form-control" required />
+    </div>
+    <div class="mb-3 form-check">
+        <input type="checkbox" name="isAdmin" value="true" class="form-check-input" id="chkAdmin" />
+        <label class="form-check-label" for="chkAdmin">Admin</label>
+    </div>
+    <button type="submit" class="btn btn-primary">Create</button>
+</form>

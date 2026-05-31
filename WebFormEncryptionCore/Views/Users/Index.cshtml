@@ -1,0 +1,47 @@
+@model IEnumerable<WebFormEncryptionCore.Models.User>
+@{
+    ViewData["Title"] = "User Management";
+}
+
+<h1>User Management</h1>
+<p>
+    <a href="Default.aspx">&larr; Home</a>
+    | <a href="Settings.aspx">Settings</a>
+    | <a href="Login.aspx?action=logout">Logout</a>
+</p>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<h4>Users</h4>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr><th>ID</th><th>Username</th><th>Is Admin</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+    @foreach (var user in Model)
+    {
+        <tr>
+            <td>@user.Id</td>
+            <td>@user.Username</td>
+            <td>@(user.IsAdmin ? "Yes" : "No")</td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@user.Id" class="btn btn-sm btn-warning">Edit</a>
+                <form asp-action="Delete" method="post" style="display:inline">
+                    <input type="hidden" name="id" value="@user.Id" />
+                    <button class="btn btn-sm btn-danger" onclick="return confirm('Delete?')">Delete</button>
+                </form>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+<hr />
+<a asp-action="Create" class="btn btn-primary">Create New User</a>
