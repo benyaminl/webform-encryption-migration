@@ -5,10 +5,10 @@ namespace WebFormEncryptionCore.Controllers;
 
 public class UsersController : Controller
 {
-    private readonly AuthService _auth;
-    private readonly RemoteSessionService _session;
+    private readonly IAuthService _auth;
+    private readonly IRemoteSessionService _session;
 
-    public UsersController(AuthService auth, RemoteSessionService session)
+    public UsersController(IAuthService auth, IRemoteSessionService session)
     {
         _auth = auth;
         _session = session;

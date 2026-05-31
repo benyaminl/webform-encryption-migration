@@ -3,8 +3,8 @@ using Yarp.ReverseProxy.Transforms;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
-builder.Services.AddSingleton<WebFormEncryptionCore.Services.AuthService>();
-builder.Services.AddSingleton<WebFormEncryptionCore.Services.RemoteSessionService>();
+builder.Services.AddSingleton<WebFormEncryptionCore.Services.IAuthService, WebFormEncryptionCore.Services.AuthService>();
+builder.Services.AddSingleton<WebFormEncryptionCore.Services.IRemoteSessionService, WebFormEncryptionCore.Services.RemoteSessionService>();
 
 // YARP reverse proxy - fallback to WebForm app
 builder.Services.AddReverseProxy()

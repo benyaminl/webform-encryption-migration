@@ -4,7 +4,7 @@ using WebFormEncryptionCore.Models;
 
 namespace WebFormEncryptionCore.Services;
 
-public class AuthService
+public class AuthService : IAuthService
 {
     private readonly string _connectionString;
 

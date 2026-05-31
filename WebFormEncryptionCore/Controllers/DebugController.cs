@@ -5,9 +5,9 @@ namespace WebFormEncryptionCore.Controllers;
 
 public class DebugController : Controller
 {
-    private readonly RemoteSessionService _session;
+    private readonly IRemoteSessionService _session;
 
-    public DebugController(RemoteSessionService session) => _session = session;
+    public DebugController(IRemoteSessionService session) => _session = session;
 
     // GET /Debug/Session - shows what session data we can fetch
     public async Task<IActionResult> Session()

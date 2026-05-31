@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace WebFormEncryptionCore.Services;
 
-public class RemoteSessionService
+public class RemoteSessionService : IRemoteSessionService
 {
     private readonly HttpClient _client;
     private readonly ILogger<RemoteSessionService> _logger;
