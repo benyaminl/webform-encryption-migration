@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="WebFormEncryptionApp\WebFormEncryptionApp.csproj" />
+  <Project Path="WebFormEncryptionCore\WebFormEncryptionCore.csproj" />
+</Solution>
