@@ -1,0 +1,26 @@
+@baseUrl = http://localhost:8080
+@sessionId = v0zsogzkkafv0ikeoypyw30u
+@sessionAuth = 5AB08D0DCF237832837ABB63F00E4E30027885E60E46CC1AA72C848E07A8FC684CE8529C38D188912C1DC32FBAF3A90F07084663E8865DD0A060A2F8753107FA85063F238645DA1E62ACD4C8846426145AEEA3BB78E7700956D37A197F29943C
+## Please disable cookie jar!
+# {
+#   "rest-client.enableCookieJar": false
+# }
+### Get session data (requires valid ASP.NET session cookie)
+GET {{baseUrl}}/SessionApi.ashx
+X-Session-ApiKey: 00000000-0000-0000-0000-000000000001
+Cookie: ASP.NET_SessionId={{sessionId}}; .ASPXAUTH={{sessionAuth}}
+
+### Set session values
+POST {{baseUrl}}/SessionApi.ashx
+X-Session-ApiKey: 00000000-0000-0000-0000-000000000001
+Cookie: ASP.NET_SessionId={{sessionId}}; .ASPXAUTH={{sessionAuth}}
+Content-Type: application/json
+
+{
+  "MyCustomKey": "hello",
+  "Counter": 42
+}
+
+### Unauthorized (missing/wrong API key)
+GET {{baseUrl}}/SessionApi.ashx
+X-Session-ApiKey: wrong-key

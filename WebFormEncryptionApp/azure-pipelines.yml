@@ -1,0 +1,74 @@
+trigger:
+  branches:
+    exclude:
+      - '*'
+  tags:
+    include:
+      - 'dev-*'
+      - 'uat-*'
+      - 'prod-*'
+pr: none
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  ${{ if startsWith(variables['Build.SourceBranchName'], 'prod-') }}:
+    buildConfiguration: 'Release'
+    treatWarningsAsErrors: 'true'
+  ${{ else }}:
+    buildConfiguration: 'Debug'
+    treatWarningsAsErrors: 'false'
+
+steps:
+- checkout: self
+  fetchDepth: 0
+
+- task: Cache@2
+  displayName: 'Cache NuGet packages'
+  inputs:
+    key: 'nuget | "$(Agent.OS)" | packages.config'
+    restoreKeys: |
+      nuget | "$(Agent.OS)"
+    path: '$(Build.SourcesDirectory)/packages'
+
+- task: NuGetCommand@2
+  displayName: 'Restore NuGet packages'
+  inputs:
+    command: 'restore'
+    restoreSolution: 'WebFormEncryptionApp.csproj'
+    restoreDirectory: '$(Build.SourcesDirectory)/packages'
+
+- task: VSBuild@1
+  displayName: 'Build project ($(buildConfiguration))'
+  inputs:
+    solution: 'WebFormEncryptionApp.csproj'
+    configuration: '$(buildConfiguration)'
+    msbuildArgs: '/p:TreatWarningsAsErrors=$(treatWarningsAsErrors)'
+
+
+- task: FileTransform@2
+  displayName: 'Replace appSettings with secret values'
+  inputs:
+    folderPath: '$(Build.SourcesDirectory)'
+    enableXmlTransform: false
+    xmlTargetFiles: 'Web.config'
+    errorOnInvalidSubstitution: true
+    
+
+- powershell: |
+    $publishDir = "$(Build.ArtifactStagingDirectory)\publish"
+    New-Item -Path "$publishDir\App_Data\Files" -ItemType Directory -Force
+    New-Item -Path "$publishDir\bin" -ItemType Directory -Force
+    New-Item -Path "$publishDir\App_Data\Files\.gitkeep" -ItemType File -Force
+    Copy-Item -Path "bin\*" -Destination "$publishDir\bin" -Recurse -Force
+    Copy-Item -Path "*.aspx" -Destination "$publishDir" -Force
+    Copy-Item -Path "Global.asax" -Destination "$publishDir" -Force
+    Copy-Item -Path "Web.config" -Destination "$publishDir" -Force
+  displayName: 'Publish files'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish artifact'
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)\publish'
+    ArtifactName: 'WebFormEncryptionApp-$(Build.SourceBranchName)'
